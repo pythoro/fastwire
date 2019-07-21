@@ -2,7 +2,7 @@
 """
 Created on Sun Jul 21 21:59:00 2019
 
-@author: reube
+@author: Reuben
 """
 
 import weakref
@@ -20,12 +20,29 @@ signal = default_container.signal
 
     
 class Signal():
-    def __init__(self, name=None, receiver_limit=None):
+    def __init__(self, name=None, receiver_limit=None, condition=None):
         self._receivers = {}
         self._receiver_kwargs = {}
         self._name = name
         self._receiver_limit = receiver_limit
         self._next_id = 0
+        self._conditions = {}
+        self.emit = self._emit
+        if condition is not None:
+            self.add_condition(condition)
+    
+    def add_condition(self, condition):
+        self._conditions[condition.name] = condition
+        self.emit = self._conditioned_emit
+        return True
+        
+    def remove_condition(self, name):
+        try:
+            del self._conditions[name]
+        except KeyError:
+            pass
+        if len(self._conditions) == 0:
+            self.emit = self._emit
     
     def connect(self, receiver, **receiver_kwargs):
         if self.n == self._receiver_limit:
@@ -62,11 +79,21 @@ class Signal():
         except KeyError:
             pass
         return True
-    
-    def emit(self, **kwargs):
+
+    def _emit(self, **kwargs):
         for receiver_id, ref in self._receivers.items():
             receiver = ref()
-            receiver(**kwargs)
+            receiver(**kwargs)    
+            
+    def _conditioned_emit(self, **kwargs):
+        for receiver_id, ref in self._receivers.items():
+            condition_pass = True
+            for condition_name, condition in self._conditions.items():
+                rec_kwargs = self._receiver_kwargs[receiver_id]
+                all_kwargs = {**rec_kwargs, **kwargs}
+                condition_pass &= condition.check(**all_kwargs)
+            if condition_pass:
+                self._emit(**kwargs)
             
     def fetch(self, **kwargs):
         if self._receiver_limit != 1:

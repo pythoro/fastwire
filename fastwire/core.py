@@ -8,7 +8,8 @@ Created on Sun Jul 21 21:59:00 2019
 import weakref
 
 class SignalContainer(dict):
-
+    ''' Holds a collection of signals '''
+    
     def signal(self, name=None):
         name = len(self) if name is None else name
         s = Signal(name=name)
@@ -20,6 +21,8 @@ signal = default_container.signal
 
     
 class Signal():
+    ''' The core signal class '''
+    
     def __init__(self, name=None, receiver_limit=None, condition=None):
         self._receivers = {}
         self._receiver_kwargs = {}
@@ -32,11 +35,13 @@ class Signal():
             self.add_condition(condition)
     
     def add_condition(self, condition):
+        ''' Add a condition that the signal must pass to be received '''
         self._conditions[condition.name] = condition
         self.emit = self._conditioned_emit
         return True
         
     def remove_condition(self, name):
+        ''' Remove a condition that the signal must pass to be received '''
         try:
             del self._conditions[name]
         except KeyError:
@@ -45,6 +50,7 @@ class Signal():
             self.emit = self._emit
     
     def connect(self, receiver, **receiver_kwargs):
+        ''' Store weakref of receiver function or method to call '''
         if self.n == self._receiver_limit:
             raise KeyError('Limit of receivers (or suppliers) reached.')
         receiver_id = self._next_id
@@ -62,17 +68,21 @@ class Signal():
     
     @property
     def n(self):
+        ''' Number of recievers '''
         return len(self._receivers)
 
     @property
     def receivers_present(self):
+        ''' A boolean check if receivers are present '''
         return len(self._receivers) > 0
     
     @property
     def name(self):
+        ''' The signal name '''
         return self._name
     
     def disconnect(self, receiver_id):
+        ''' Disconnect a receiver '''
         try:
             del self._receivers[receiver_id]
             del self._receiver_kwargs[receiver_id]
@@ -81,11 +91,16 @@ class Signal():
         return True
 
     def _emit(self, **kwargs):
+        ''' The standard emit method 
+        
+        Note: The 'emit' method is set to this method normally.
+        '''
         for receiver_id, ref in self._receivers.items():
             receiver = ref()
             receiver(**kwargs)    
             
     def _conditioned_emit(self, **kwargs):
+        ''' A conditioned emit method '''
         for receiver_id, ref in self._receivers.items():
             condition_pass = True
             for condition_name, condition in self._conditions.items():
@@ -96,6 +111,7 @@ class Signal():
                 self._emit(**kwargs)
             
     def fetch(self, **kwargs):
+        ''' Get a return value from a single supplier '''
         if self._receiver_limit != 1:
             raise KeyError('Signal must be set to have only 1 supplier.')
         if self.n == 0:
@@ -105,7 +121,16 @@ class Signal():
             return receiver(**kwargs)
 
 
+class Condition():
+    ''' A template for a signal condition '''
+    name = 'default'
+    def check(self, **kwargs):
+        ''' The main check call - must return a boolean '''
+        raise NotImplementedError()
+
+
 def connect_to(s, **receiver_kwargs):
+    ''' A decorator to connect functions and methods automatically '''
     if not isinstance(s, list):
         s = [s]
         
@@ -123,6 +148,7 @@ def connect_to(s, **receiver_kwargs):
 
 
 def supplies(s, **receiver_kwargs):
-        if s._receiver_limit != 1:
-            raise KeyError('Signal must be set to have only 1 supplier.')
-        return connect_to(s, **receiver_kwargs)
+    ''' A special case of reciever where there must be only one source '''
+    if s._receiver_limit != 1:
+        raise KeyError('Signal must be set to have only 1 supplier.')
+    return connect_to(s, **receiver_kwargs)

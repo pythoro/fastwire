@@ -120,6 +120,16 @@ class Signal():
             receiver = ref()
             return receiver(**kwargs)
 
+    def fetch_all(self, **kwargs):
+        ''' Get a return value from a single supplier '''
+        if self.n == 0:
+            raise KeyError('No suppliers')
+        ret = []
+        for receiver_id, ref in self._receivers.items():
+            receiver = ref()
+            ret.append(receiver(**kwargs))
+        return ret
+
 
 class Condition():
     ''' A template for a signal condition '''

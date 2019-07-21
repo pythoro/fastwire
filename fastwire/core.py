@@ -16,6 +16,15 @@ class SignalContainer(dict):
         self[name] = s
         return s
     
+    def mute_all(self):
+        for key, signal in self.items():
+            signal.mute()
+
+    def unmute_all(self):
+        for key, signal in self.items():
+            signal.unmute()
+
+    
 default_container = SignalContainer()
 signal = default_container.signal
 
@@ -109,7 +118,18 @@ class Signal():
                 condition_pass &= condition.check(**all_kwargs)
             if condition_pass:
                 self._emit(**kwargs)
+
+    def _muted(self, **kwargs):
+        pass
             
+    def mute(self):
+        self._prev_emit = self.emit
+        self.emit = self._muted
+
+    def unmute(self):
+        self.emit = self._prev_emit
+        del self._prev_emit
+    
     def fetch(self, **kwargs):
         ''' Get a return value from a single supplier '''
         if self._receiver_limit != 1:
@@ -129,6 +149,7 @@ class Signal():
             receiver = ref()
             ret.append(receiver(**kwargs))
         return ret
+
 
 
 class Condition():

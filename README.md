@@ -69,9 +69,14 @@ all receivers.
 
 ## Signal properties
 
-n: Number of recievers
-receivers_present: True if receivers are present
-name: The name of the signal
+### signal.n
+Number of recievers.
+
+### signal.receivers_present
+True if receivers are present.
+
+### name
+The name of the signal.
 
 ## Decorators
 

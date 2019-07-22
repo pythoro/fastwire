@@ -1,6 +1,9 @@
 # fastwire
 
-Fastwire is a simple package to facilitate communication between objects. It provides similar functionality to Blinker, but uses some newer Python features. It uses an Inversion-of-Control and Dependency injection to help keep code simple.
+Fastwire is a simple package to facilitate communication between objects. It
+provides similar functionality to several other packages, such as 
+*blinker*, *wires*, and *wired*. It's intended to be smaller and light weight.
+It uses an Inversion-of-Control and dependency injection to help keep code simple.
 
 ## Basic usage
 

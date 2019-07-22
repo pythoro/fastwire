@@ -48,3 +48,17 @@ class Test_Decorators(unittest.TestCase):
         val = 5.7
         signal.emit(a=val)
         self.assertEqual(a._a, val)
+
+
+    def test_connect_fn_to_emit(self):
+        signal = fastwire.Signal()
+
+        test = [0]
+        
+        @fastwire.connect_fn_to(signal)
+        def connected(a):
+            test[0] = a
+
+        val = 5.7
+        signal.emit(a=val)
+        self.assertEqual(test[0], val)

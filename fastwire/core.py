@@ -152,7 +152,6 @@ class Signal():
         return ret
 
 
-
 class Condition():
     ''' A template for a signal condition '''
     name = 'default'
@@ -194,7 +193,7 @@ def connect_to(s, **receiver_kwargs):
             cs = owner._connected_signals
             for signal in s:
                 cs.append([name, signal, receiver_kwargs])
-            setattr(owner, name, self.fn)
+            setattr(owner, name, self.fn) # Replace decorator with original function
         
     return Decorator
 
@@ -204,3 +203,20 @@ def supplies(s, **receiver_kwargs):
     if s._receiver_limit != 1:
         raise KeyError('Signal must be set to have only 1 supplier.')
     return connect_to(s, **receiver_kwargs)
+
+
+def connect_fn_to(s, **receiver_kwargs):
+    ''' For functions '''
+    if not isinstance(s, list):
+        s = [s]
+    def decorator(fn):
+        for signal in s:
+            signal.connect(fn, **receiver_kwargs)
+        return fn
+    return decorator
+
+
+def supplies_fn(s, **receiver_kwargs):
+    if s._receiver_limit != 1:
+        raise KeyError('Signal must be set to have only 1 supplier.')
+    return connect_fn_to(s, **receiver_kwargs)

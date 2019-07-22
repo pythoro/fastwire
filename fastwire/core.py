@@ -216,7 +216,7 @@ def connect_fn_to(s, **receiver_kwargs):
     return decorator
 
 
-def supplies_fn(s, **receiver_kwargs):
+def fn_supplies(s, **receiver_kwargs):
     if s._receiver_limit != 1:
         raise KeyError('Signal must be set to have only 1 supplier.')
     return connect_fn_to(s, **receiver_kwargs)

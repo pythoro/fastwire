@@ -67,6 +67,12 @@ requires there to be a single function or method that 'supplies' the return
 value. The signal.fetch_all method returns a list of return values from
 all receivers.
 
+## Signal properties
+
+n: Number of recievers
+receivers_present: True if receivers are present
+name: The name of the signal
+
 ## Decorators
 
 It can be convenient to use decorators to automatically connect. Do do this,
@@ -134,5 +140,29 @@ signal.emit(a=15)
 # Nothing happens
 ```
 
+To remove:
+
+```python
+signal.remove_condition(My_Condition.name)
+signal.emit(a=15)
+# Class A instance received a 15
+# test_fun got a 15
+```
+
 Condition classes are completely open - they can be as simple as the above
 example or as complex as a state machine.
+
+## Muting
+
+No receivers get a muted signal. You can mute and unmute a signal easily...
+
+```python
+signal.mute()
+signal.emit(a=3)
+# Nothing mappens
+
+signal.unmute()
+signal.emit(a=3)
+# Class A instance received a 3
+# test_fun got a 3
+```

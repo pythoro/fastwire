@@ -165,10 +165,12 @@ class Fastwired():
     def __new__(cls, *args, **kwargs):
         ''' Called at instance creation '''
         def register_signals(inst):
-            if hasattr(inst, '_connected_signals'):
-                sigs = getattr(inst, '_connected_signals')
+            try:
+                sigs = inst.__getattribute__('_connected_signals')
                 for name, s, receiver_kwargs in sigs:
-                    s.connect(getattr(inst, name), **receiver_kwargs)
+                    s.connect(inst.__getattribute__(name), **receiver_kwargs)
+            except AttributeError:
+                pass
         
         inst = super().__new__(cls, *args, **kwargs)
         register_signals(inst)

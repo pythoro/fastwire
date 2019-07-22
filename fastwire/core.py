@@ -10,9 +10,9 @@ import weakref
 class SignalContainer(dict):
     ''' Holds a collection of signals '''
     
-    def signal(self, name=None):
+    def signal(self, name=None, **kwargs):
         name = len(self) if name is None else name
-        s = Signal(name=name)
+        s = Signal(name=name, **kwargs)
         self[name] = s
         return s
     
@@ -32,10 +32,11 @@ signal = default_container.signal
 class Signal():
     ''' The core signal class '''
     
-    def __init__(self, name=None, receiver_limit=None, condition=None):
+    def __init__(self, name=None, doc=None, receiver_limit=None, condition=None):
         self._receivers = {}
         self._receiver_kwargs = {}
         self._name = name
+        self._doc = doc
         self._receiver_limit = receiver_limit
         self._next_id = 0
         self._conditions = {}
@@ -160,6 +161,20 @@ class Condition():
         raise NotImplementedError()
 
 
+class Fastwired():
+    def __new__(cls, *args, **kwargs):
+        ''' Called at instance creation '''
+        def register_signals(inst):
+            if hasattr(inst, '_connected_signals'):
+                sigs = getattr(inst, '_connected_signals')
+                for name, s, receiver_kwargs in sigs:
+                    s.connect(getattr(inst, name), **receiver_kwargs)
+        
+        inst = super().__new__(cls, *args, **kwargs)
+        register_signals(inst)
+        return inst
+        
+
 def connect_to(s, **receiver_kwargs):
     ''' A decorator to connect functions and methods automatically '''
     if not isinstance(s, list):
@@ -172,9 +187,13 @@ def connect_to(s, **receiver_kwargs):
     
         def __set_name__(self, owner, name):
             # Called at class creation
+            if not hasattr(owner, '_connected_signals'):
+                owner._connected_signals = []
+            cs = owner._connected_signals
             for signal in s:
-                signal.connect(self.fn, **receiver_kwargs)
+                cs.append([name, signal, receiver_kwargs])
             setattr(owner, name, self.fn)
+        
     return Decorator
 
 

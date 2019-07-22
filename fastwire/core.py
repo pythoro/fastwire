@@ -24,6 +24,10 @@ class SignalContainer(dict):
         for key, signal in self.items():
             signal.unmute()
 
+    def reset_all(self):
+        for key, signal in self.items():
+            signal.reset()
+    
     
 default_container = SignalContainer()
 signal = default_container.signal
@@ -33,14 +37,10 @@ class Signal():
     ''' The core signal class '''
     
     def __init__(self, name=None, doc=None, receiver_limit=None, condition=None):
-        self._receivers = {}
-        self._receiver_kwargs = {}
+        self.reset()
         self._name = name
         self._doc = doc
         self._receiver_limit = receiver_limit
-        self._next_id = 0
-        self._conditions = {}
-        self.emit = self._emit
         if condition is not None:
             self.add_condition(condition)
     
@@ -150,6 +150,13 @@ class Signal():
             receiver = ref()
             ret.append(receiver(**kwargs))
         return ret
+
+    def reset(self):
+        self._receivers = {}
+        self._receiver_kwargs = {}
+        self._next_id = 0
+        self._conditions = {}
+        self.emit = self._emit
 
 
 class Condition():

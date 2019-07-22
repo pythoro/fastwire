@@ -12,7 +12,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="fastwire",
-    version="0.0.1",
+    version="0.1",
     author="Reuben Rusk",
     author_email="pythoro@mindquip.com",
     description="Easy data transfer between classes.",
@@ -21,9 +21,13 @@ setuptools.setup(
     url="https://github.com/pythoro/fastwire.git",
     packages=['fastwire'],
     classifiers=[
+        "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
+        "Development Status :: 3 - Alpha",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
+        "Natural Language :: English",
+        "Topic :: Software Development :: Libraries :: Python Modules"
     ],
     install_requires=[],
 )

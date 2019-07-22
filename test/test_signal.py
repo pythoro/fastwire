@@ -15,7 +15,7 @@ class Test_Signal(unittest.TestCase):
     def test_method_connect(self):
         signal = fastwire.Signal()
 
-        class A(fastwire.Fastwired):
+        class A():
             def connected(self, a):
                 self._a = a
 
@@ -26,7 +26,7 @@ class Test_Signal(unittest.TestCase):
     def test_method_disconnect(self):
         signal = fastwire.Signal()
 
-        class A(fastwire.Fastwired):
+        class A():
             def connected(self, a):
                 self._a = a
 
@@ -39,7 +39,7 @@ class Test_Signal(unittest.TestCase):
     def test_method_weakref(self):
         signal = fastwire.Signal()
 
-        class A(fastwire.Fastwired):
+        class A():
             def connected(self, a):
                 self._a = a
 
@@ -84,7 +84,7 @@ class Test_Signal(unittest.TestCase):
     def test_emit(self):
         signal = fastwire.Signal()
 
-        class A(fastwire.Fastwired):
+        class A():
             def connected(self, a):
                 self._a = a
 
@@ -99,7 +99,7 @@ class Test_Signal(unittest.TestCase):
     def test_mute(self):
         signal = fastwire.Signal()
 
-        class A(fastwire.Fastwired):
+        class A():
             def connected(self, a):
                 self._a = a
 

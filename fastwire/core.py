@@ -167,7 +167,7 @@ class Condition():
         raise NotImplementedError()
 
 
-class Fastwired():
+class Wired():
     def __new__(cls, *args, **kwargs):
         ''' Called at instance creation '''
         def register_signals(inst):
@@ -183,7 +183,7 @@ class Fastwired():
         return inst
         
 
-def connect_to(s, **receiver_kwargs):
+def receive(s, **receiver_kwargs):
     ''' A decorator to connect functions and methods automatically '''
     if not isinstance(s, list):
         s = [s]
@@ -205,14 +205,14 @@ def connect_to(s, **receiver_kwargs):
     return Decorator
 
 
-def supplies(s, **receiver_kwargs):
+def supply(s, **receiver_kwargs):
     ''' A special case of reciever where there must be only one source '''
     if s._receiver_limit != 1:
         raise KeyError('Signal must be set to have only 1 supplier.')
-    return connect_to(s, **receiver_kwargs)
+    return receive(s, **receiver_kwargs)
 
 
-def connect_fn_to(s, **receiver_kwargs):
+def fn_receive(s, **receiver_kwargs):
     ''' For functions '''
     if not isinstance(s, list):
         s = [s]
@@ -223,7 +223,7 @@ def connect_fn_to(s, **receiver_kwargs):
     return decorator
 
 
-def fn_supplies(s, **receiver_kwargs):
+def fn_supply(s, **receiver_kwargs):
     if s._receiver_limit != 1:
         raise KeyError('Signal must be set to have only 1 supplier.')
-    return connect_fn_to(s, **receiver_kwargs)
+    return fn_receive(s, **receiver_kwargs)

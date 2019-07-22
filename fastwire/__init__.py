@@ -6,5 +6,5 @@ Created on Sun Jul 21 22:06:32 2019
 """
 
 from . import core
-from .core import SignalContainer, Signal, signal, connect_to, supplies,\
-    Fastwired, connect_fn_to, fn_supplies
+from .core import SignalContainer, Signal, signal, receive, supply,\
+    Wired, fn_receive, fn_supply

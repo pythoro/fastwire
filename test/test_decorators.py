@@ -12,11 +12,11 @@ import unittest
 
 class Test_Decorators(unittest.TestCase):
     
-    def test_method_connect_to(self):
+    def test_receive(self):
         signal = fastwire.Signal()
 
-        class A(fastwire.Fastwired):
-            @fastwire.connect_to(signal)
+        class A(fastwire.Wired):
+            @fastwire.receive(signal)
             def connected(self, a):
                 self._a = a
 
@@ -24,11 +24,11 @@ class Test_Decorators(unittest.TestCase):
         self.assertEqual(len(signal._receivers.keys()), 1)
 
         
-    def test_method_supplies(self):
+    def test_supply(self):
         signal = fastwire.Signal(receiver_limit=1)
 
-        class A(fastwire.Fastwired):
-            @fastwire.supplies(signal)
+        class A(fastwire.Wired):
+            @fastwire.supply(signal)
             def connected(self, a):
                 self._a = a
 
@@ -36,11 +36,11 @@ class Test_Decorators(unittest.TestCase):
         self.assertEqual(len(signal._receivers.keys()), 1)
 
         
-    def test_method_connect_to_emit(self):
+    def test_receive_emit(self):
         signal = fastwire.Signal()
 
-        class A(fastwire.Fastwired):
-            @fastwire.connect_to(signal)
+        class A(fastwire.Wired):
+            @fastwire.receive(signal)
             def connected(self, a):
                 self._a = a
 
@@ -50,12 +50,12 @@ class Test_Decorators(unittest.TestCase):
         self.assertEqual(a._a, val)
 
 
-    def test_connect_fn_to_emit(self):
+    def test_fn_receive_emit(self):
         signal = fastwire.Signal()
 
         test = [0]
         
-        @fastwire.connect_fn_to(signal)
+        @fastwire.fn_receive(signal)
         def connected(a):
             test[0] = a
 

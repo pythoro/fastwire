@@ -9,9 +9,9 @@ Create a signal container:
 
 ```python
 
-import fastwire
+import fastwire as fw
 
-sc = fastwire.SignalContainer()
+sc = fw.SignalContainer()
 ```
 
 Then create a signal...
@@ -81,13 +81,13 @@ The name of the signal.
 ## Decorators
 
 It can be convenient to use decorators to automatically connect. Do do this,
-the class needs to inherit fastwire.Wired.
+the class needs to inherit fw.Wired.
 
 ```python
 signal_c = sc.signal('C')
 
-class B(fastwire.Wired):
-	@fastwire.receives(signal_c)
+class B(fw.Wired):
+	@fw.receives(signal_c)
 	def connected(self, a):
 		print('Class B instance got ' + str(a))
 
@@ -99,7 +99,7 @@ signal_c.emit(a=7)
 Functions need to use a different decorator.
 
 ```python
-@fastwire.fn_receives(signal_c)
+@fw.fn_receives(signal_c)
 def test_fun_2(a):
     print('test_fun_2 got ' + str(a))
 signal_c.emit(a=88)

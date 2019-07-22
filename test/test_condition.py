@@ -23,7 +23,7 @@ class My_Condition():
 class Test_Condition(unittest.TestCase):
     
 
-    def test_emit(self):
+    def test_add_condition(self):
         signal = fastwire.Signal()
 
         class A():
@@ -40,3 +40,22 @@ class Test_Condition(unittest.TestCase):
         self.assertEqual(a._a, val)
         signal.emit(a=15)
         self.assertEqual(a._a, val)
+        
+    def test_remove_condition(self):
+        signal = fastwire.Signal()
+
+        class A():
+            def connected(self, a):
+                self._a = a
+
+        a = A()
+        signal.connect(a.connected)
+
+        signal.add_condition(My_Condition())
+        signal.remove_condition(My_Condition.name)
+        
+        val = 5.7
+        signal.emit(a=val)
+        self.assertEqual(a._a, val)
+        signal.emit(a=15)
+        self.assertEqual(a._a, 15)

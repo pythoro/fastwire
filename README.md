@@ -1,9 +1,19 @@
 # fastwire
 
 Fastwire is a simple package to facilitate communication between objects. It
-provides similar functionality to several other packages, such as 
-*blinker*, *wires*, and *wired*. It's intended to be smaller and light weight.
-It uses an Inversion-of-Control and dependency injection to help keep code simple.
+provides similar functionality to several other packages, such as:
+ 
+* blinker
+* wires
+* wired
+* observable
+* pyDispatcher
+* pymitter
+* py-notify
+* zope-event
+
+Fastwire is intended to be elegant to use, fast to implement, and more
+flexible, while maintianing high performance.
 
 ## Basic usage
 

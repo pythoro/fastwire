@@ -79,8 +79,7 @@ class Test_Signal(unittest.TestCase):
         receiver_id = signal.connect(connected)
         del connected
         self.assertEqual(list(signal._receivers.keys()), [])
-
-
+         
     def test_emit(self):
         signal = fastwire.Signal()
 
@@ -90,12 +89,10 @@ class Test_Signal(unittest.TestCase):
 
         a = A()
         signal.connect(a.connected)
-
         val = 5.7
         signal.emit(a=val)
         self.assertEqual(a._a, val)
-         
-       
+        
     def test_mute(self):
         signal = fastwire.Signal()
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sun Jul 21 21:59:00 2019
+Created on Sat Jul 27 08:56:13 2019
 
 @author: Reuben
 """
@@ -31,71 +31,6 @@ class SignalContainer(dict):
     
 default_container = SignalContainer()
 signal = default_container.signal
-
-
-class WireContainer(dict):
-    ''' Holds a collection of signals '''
-    
-    def wire(self, name=None, doc=None):
-        name = len(self) if name is None else name
-        w = Wire(name=name, doc=doc)
-        self[name] = w
-        return w
-    
-    def mute_all(self):
-        for key, wire in self.items():
-            wire.mute()
-
-    def unmute_all(self):
-        for key, wire in self.items():
-            wire.unmute()
-
-    def reset_all(self):
-        for key, wire in self.items():
-            wire.reset()
-    
-    
-default_container = SignalContainer()
-signal = default_container.signal
-
-default_wire_container = WireContainer()
-wire = default_wire_container.wire
-
-
-class Wire():
-    def __init__(self, name=None, doc=None):
-        self._name = name
-        self._doc = doc
-        self.reset()
-        
-    def _emit(self):
-        raise AttributeError('Wire instance is not connected')
-    
-    def connect(self, receiver):
-        if self.emit != self._emit:
-            raise AttributeError('Wire instance is already connected and'
-                                 + 'must first be disconnected.')
-        self.emit = receiver
-        self.fetch = receiver
-    
-    def disconnect(self):
-        self.reset()
-        
-    def _muted(self):
-        pass
-        
-    def mute(self):
-        self._old = self.emit
-        self.emit = self._muted
-
-    def unmute(self):
-        self.emit = self._old
-        del self._old
-        
-    def reset(self):
-        self.emit = self._emit
-        self.fetch = self._emit
-        
 
     
 class Signal():
@@ -222,73 +157,3 @@ class Signal():
         self._next_id = 0
         self._conditions = {}
         self.emit = self._emit
-
-
-class Condition():
-    ''' A template for a signal condition '''
-    name = 'default'
-    def check(self, **kwargs):
-        ''' The main check call - must return a boolean '''
-        raise NotImplementedError()
-
-
-class Wired():
-    def __new__(cls, *args, **kwargs):
-        ''' Called at instance creation '''
-        def register_signals(inst):
-            try:
-                sigs = inst.__getattribute__('_connected_signals')
-                for name, s, receiver_kwargs in sigs:
-                    s.connect(inst.__getattribute__(name), **receiver_kwargs)
-            except AttributeError:
-                pass
-        
-        inst = super().__new__(cls, *args, **kwargs)
-        register_signals(inst)
-        return inst
-        
-
-def receive(s, **receiver_kwargs):
-    ''' A decorator to connect functions and methods automatically '''
-    if not isinstance(s, list):
-        s = [s]
-        
-    class Decorator():
-        # See https://stackoverflow.com/questions/2366713/can-a-python-decorator-of-an-instance-method-access-the-class
-        def __init__(self, fn):
-            self.fn = fn
-    
-        def __set_name__(self, owner, name):
-            # Called at class creation
-            if not hasattr(owner, '_connected_signals'):
-                owner._connected_signals = []
-            cs = owner._connected_signals
-            for signal in s:
-                cs.append([name, signal, receiver_kwargs])
-            setattr(owner, name, self.fn) # Replace decorator with original function
-        
-    return Decorator
-
-
-def supply(s, **receiver_kwargs):
-    ''' A special case of reciever where there must be only one source '''
-    if s._receiver_limit != 1:
-        raise KeyError('Signal must be set to have only 1 supplier.')
-    return receive(s, **receiver_kwargs)
-
-
-def fn_receive(s, **receiver_kwargs):
-    ''' For functions '''
-    if not isinstance(s, list):
-        s = [s]
-    def decorator(fn):
-        for signal in s:
-            signal.connect(fn, **receiver_kwargs)
-        return fn
-    return decorator
-
-
-def fn_supply(s, **receiver_kwargs):
-    if s._receiver_limit != 1:
-        raise KeyError('Signal must be set to have only 1 supplier.')
-    return fn_receive(s, **receiver_kwargs)

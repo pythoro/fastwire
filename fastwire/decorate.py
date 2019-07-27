@@ -3,11 +3,21 @@
 Created on Sat Jul 27 08:58:26 2019
 
 @author: Reuben
+
+The decorate module contians a number of decorators which assist with
+automatically connecting methods and functions.
+
 """
 
 
 def receive(s, **receiver_kwargs):
-    ''' A decorator to connect functions and methods automatically '''
+    ''' A decorator to connect methods to Signal instances automatically 
+    
+    Args:
+        s (Signal): A Signal instance, or list of Signal instances.
+        **receiver_kwargs: Any number of key word arguments. These are passed
+            to any Condition instances added to the Signal instance.
+    '''
     if not isinstance(s, list):
         s = [s]
         
@@ -29,14 +39,26 @@ def receive(s, **receiver_kwargs):
 
 
 def supply(s, **receiver_kwargs):
-    ''' A special case of reciever where there must be only one source '''
+    ''' A decorator to set methods to be the sole source for a Signal 
+    
+    Args:
+        s (Signal): A Signal instance, or list of Signal instances.
+        **receiver_kwargs: Any number of key word arguments. These are passed
+            to any Condition instances added to the Signal instance.
+    '''
     if s._receiver_limit != 1:
         raise KeyError('Signal must be set to have only 1 supplier.')
     return receive(s, **receiver_kwargs)
 
 
 def fn_receive(s, **receiver_kwargs):
-    ''' For functions '''
+    ''' A decorator to connect methods to Signal instances automatically 
+    
+    Args:
+        s (Signal): A Signal instance, or list of Signal instances.
+        **receiver_kwargs: Any number of key word arguments. These are passed
+            to any Condition instances added to the Signal instance.
+    '''
     if not isinstance(s, list):
         s = [s]
     def decorator(fn):
@@ -47,6 +69,13 @@ def fn_receive(s, **receiver_kwargs):
 
 
 def fn_supply(s, **receiver_kwargs):
+    ''' A decorator to set methods to be the sole source for a Signal 
+    
+    Args:
+        s (Signal): A Signal instance, or list of Signal instances.
+        **receiver_kwargs: Any number of key word arguments. These are passed
+            to any Condition instances added to the Signal instance.
+    '''
     if s._receiver_limit != 1:
         raise KeyError('Signal must be set to have only 1 supplier.')
     return fn_receive(s, **receiver_kwargs)

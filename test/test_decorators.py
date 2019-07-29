@@ -10,7 +10,7 @@ import fastwire
 import unittest
 
 
-class Test_Decorators(unittest.TestCase):
+class Test_Signal_Decorators(unittest.TestCase):
     
     def test_receive(self):
         signal = fastwire.Signal()
@@ -61,4 +61,58 @@ class Test_Decorators(unittest.TestCase):
 
         val = 5.7
         signal.emit(a=val)
+        self.assertEqual(test[0], val)
+
+
+class Test_Wire_Decorators(unittest.TestCase):
+    
+    def test_receive(self):
+        wire = fastwire.Wire()
+
+        class A(fastwire.Wired):
+            @fastwire.receive(wire)
+            def connected(self, a):
+                self._a = a
+
+        a = A()
+        self.assertFalse(wire._emit == wire.emit)
+
+        
+    def test_supply(self):
+        wire = fastwire.Wire()
+
+        class A(fastwire.Wired):
+            @fastwire.supply(wire)
+            def connected(self, a):
+                self._a = a
+
+        a = A()
+        self.assertFalse(wire._emit == wire.emit)
+
+        
+    def test_receive_emit(self):
+        wire = fastwire.Wire()
+
+        class A(fastwire.Wired):
+            @fastwire.receive(wire)
+            def connected(self, a):
+                self._a = a
+
+        a = A()
+        val = 5.7
+        wire.emit(a=val)
+        self.assertEqual(a._a, val)
+
+
+    def test_fn_receive_emit(self):
+        wire = fastwire.Wire()
+
+        test = [0]
+        
+        @fastwire.fn_receive(wire)
+        def connected(a):
+            test[0] = a
+
+        val = 5.7
+        wire.emit(a=val)
         self.assertEqual(test[0], val)

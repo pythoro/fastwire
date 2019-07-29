@@ -56,6 +56,7 @@ class Wire():
     def __init__(self, name=None, doc=None):
         self._name = name
         self._doc = doc
+        self._receiver_limit = 1
         self.reset()
         
     def _emit(self):
@@ -73,6 +74,7 @@ class Wire():
                                  + 'must first be disconnected.')
         self.emit = receiver
         self.fetch = receiver
+        self.receivers_present = True
     
     def disconnect(self):
         ''' Disconnect the wire from its receiver '''
@@ -96,4 +98,4 @@ class Wire():
         ''' Fully reset the wire, disconnecting it if required '''
         self.emit = self._emit
         self.fetch = self._emit
-        
+        self.receivers_present = False

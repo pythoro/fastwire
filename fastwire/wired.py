@@ -21,7 +21,10 @@ class Wired():
             except AttributeError:
                 pass
         
-        inst = super().__new__(cls, *args, **kwargs)
+        try:
+            inst = super().__new__(cls, *args, **kwargs)
+        except TypeError:
+            inst = super().__new__(cls)
         register_signals(inst)
         return inst
         

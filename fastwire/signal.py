@@ -43,12 +43,17 @@ class SignalContainer(dict):
         for key, signal in self.items():
             signal.reset()
     
-    def __getitem__(self, key):
-        if key in self:
-            return super().__getitem__(key)
+    def __getitem__(self, name):
+        ''' Get or create a Signal instance 
+        
+        Args:
+            key: The name of the signal
+        '''
+        if name in self:
+            return super().__getitem__(name)
         else:
-            s = Signal(name=key)
-            super().__setitem__(key, s)
+            s = Signal(name=name)
+            super().__setitem__(name, s)
             return s
             
     

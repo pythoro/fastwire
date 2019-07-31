@@ -43,6 +43,14 @@ class SignalContainer(dict):
         for key, signal in self.items():
             signal.reset()
     
+    def __getitem__(self, key):
+        if key in self:
+            return super().__getitem__(key)
+        else:
+            s = Signal(name=key)
+            super().__setitem__(key, s)
+            return s
+            
     
 default_container = SignalContainer()
 signal = default_container.signal

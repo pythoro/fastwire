@@ -40,6 +40,13 @@ class WireContainer(dict):
         for key, wire in self.items():
             wire.reset()
     
+    def __getitem__(self, key):
+        if key in self:
+            return super().__getitem__(key)
+        else:
+            s = Wire(name=key)
+            super().__setitem__(key, s)
+            return s
 
 default_wire_container = WireContainer()
 wire = default_wire_container.wire

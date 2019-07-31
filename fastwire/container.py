@@ -5,11 +5,18 @@ Created on Wed Jul 31 12:59:51 2019
 @author: Reuben
 """
 
+import functools
+
+from . import decorate
+
 class Container(dict):
     ''' A dictionary-like collection of Signal instances '''
     
     def __init__(self, signal_cls):
         self._signal_cls = signal_cls
+        self.receive = functools.partial(decorate.receive, container=self)
+        self.supply = functools.partial(decorate.supply, container=self)
+
     
     def new(self, name=None, doc=None, **kwargs):
         ''' Get a new Signal instance 

@@ -6,7 +6,9 @@ Created on Wed Jul 31 12:56:25 2019
 """
 
 import weakref
+import functools
 
+from . import decorate
 
 class Box():
     ''' A collection of containers 
@@ -20,6 +22,8 @@ class Box():
         self._container_cls = container_cls
         self._cs = {}
         self.add('default')
+        self.receive = functools.partial(decorate.receive, box=self)
+        self.supply = functools.partial(decorate.supply, box=self)
         
     def add(self, cid, activate=True, remove_with=None):
         ''' Add a new container referenced with cid

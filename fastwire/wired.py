@@ -16,7 +16,12 @@ class Wired():
         def register_signals(inst):
             try:
                 sigs = inst.__getattribute__('_connected_signals')
-                for name, s, receiver_kwargs in sigs:
+                for name, s, box, container, receiver_kwargs in sigs:
+                    if isinstance(s, str) or isinstance(s, int):
+                        if box is not None:
+                            s = box[s]
+                        elif container is not None:
+                            s = container[s]
                     s.connect(inst.__getattribute__(name), **receiver_kwargs)
             except AttributeError:
                 pass

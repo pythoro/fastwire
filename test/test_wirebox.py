@@ -42,9 +42,9 @@ class Test_WireBox(unittest.TestCase):
     def test_remove(self):
         wb = fastwire.WireBox()
         wb.add(0)
-        self.assertEqual(len(wb._scs), 1)
+        self.assertEqual(len(wb._cs), 2)
         wb.remove(0)
-        self.assertEqual(len(wb._scs), 0)
+        self.assertEqual(len(wb._cs), 1)
         
     def test_remove_with(self):
         class A():
@@ -52,6 +52,6 @@ class Test_WireBox(unittest.TestCase):
         a = A()
         wb = fastwire.WireBox()
         wb.add(id(a), remove_with=a)
-        self.assertEqual(len(wb._scs), 1)
+        self.assertEqual(len(wb._cs), 2)
         del a
-        self.assertEqual(len(wb._scs), 0)
+        self.assertEqual(len(wb._cs), 1)

@@ -42,9 +42,9 @@ class Test_SignalBox(unittest.TestCase):
     def test_remove(self):
         sb = fastwire.SignalBox()
         sb.add(0)
-        self.assertEqual(len(sb._scs), 1)
+        self.assertEqual(len(sb._cs), 2)
         sb.remove(0)
-        self.assertEqual(len(sb._scs), 0)
+        self.assertEqual(len(sb._cs), 1)
         
     def test_remove_with(self):
         class A():
@@ -52,6 +52,6 @@ class Test_SignalBox(unittest.TestCase):
         a = A()
         sb = fastwire.SignalBox()
         sb.add(id(a), remove_with=a)
-        self.assertEqual(len(sb._scs), 1)
+        self.assertEqual(len(sb._cs), 2)
         del a
-        self.assertEqual(len(sb._scs), 0)
+        self.assertEqual(len(sb._cs), 1)

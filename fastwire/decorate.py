@@ -10,11 +10,13 @@ automatically connecting methods and functions.
 """
 
 
-def receive(s, **receiver_kwargs):
+def receive(s, box=None, container=None, **receiver_kwargs):
     ''' A decorator to connect methods to Signal instances automatically 
     
     Args:
         s (Signal): A Signal instance, or list of Signal instances.
+        box (Box): [Optional] The box for the active container.
+        container (Container): [Optional] The container for the signal.
         **receiver_kwargs: Any number of key word arguments. These are passed
             to any Condition instances added to the Signal instance.
     '''
@@ -32,30 +34,34 @@ def receive(s, **receiver_kwargs):
                 owner._connected_signals = []
             cs = owner._connected_signals
             for signal in s:
-                cs.append([name, signal, receiver_kwargs])
+                cs.append([name, signal, box, container, receiver_kwargs])
             setattr(owner, name, self.fn) # Replace decorator with original function
         
     return Decorator
 
 
-def supply(s, **receiver_kwargs):
+def supply(s, box=None, container=None, **receiver_kwargs):
     ''' A decorator to set methods to be the sole source for a Signal 
     
     Args:
         s (Signal): A Signal instance, or list of Signal instances.
+        box (Box): [Optional] The box for the active container.
+        container (Container): [Optional] The container for the signal.
         **receiver_kwargs: Any number of key word arguments. These are passed
             to any Condition instances added to the Signal instance.
     '''
     if s._receiver_limit != 1:
         raise KeyError('Signal must be set to have only 1 supplier.')
-    return receive(s, **receiver_kwargs)
+    return receive(s, box, container, **receiver_kwargs)
 
 
-def fn_receive(s, **receiver_kwargs):
+def fn_receive(s, box=None, container=None, **receiver_kwargs):
     ''' A decorator to connect methods to Signal instances automatically 
     
     Args:
         s (Signal): A Signal instance, or list of Signal instances.
+        box (Box): [Optional] The box for the active container.
+        container (Container): [Optional] The container for the signal.
         **receiver_kwargs: Any number of key word arguments. These are passed
             to any Condition instances added to the Signal instance.
     '''
@@ -63,12 +69,17 @@ def fn_receive(s, **receiver_kwargs):
         s = [s]
     def decorator(fn):
         for signal in s:
+            if isinstance(signal, str) or isinstance(signal, int):
+                if box is not None:
+                    signal = box[signal]
+                elif container is not None:
+                    signal = container[signal]
             signal.connect(fn, **receiver_kwargs)
         return fn
     return decorator
 
 
-def fn_supply(s, **receiver_kwargs):
+def fn_supply(s, box=None, container=None, **receiver_kwargs):
     ''' A decorator to set methods to be the sole source for a Signal 
     
     Args:
@@ -78,4 +89,4 @@ def fn_supply(s, **receiver_kwargs):
     '''
     if s._receiver_limit != 1:
         raise KeyError('Signal must be set to have only 1 supplier.')
-    return fn_receive(s, **receiver_kwargs)
+    return fn_receive(s, box, container, **receiver_kwargs)

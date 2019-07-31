@@ -25,6 +25,10 @@ class Box():
         self.receive = functools.partial(decorate.receive, box=self)
         self.supply = functools.partial(decorate.supply, box=self)
         
+    @property
+    def containers(self):
+        return self._cs
+        
     def add(self, cid, activate=True, remove_with=None):
         ''' Add a new container referenced with cid
         
@@ -84,3 +88,8 @@ class Box():
         ''' Get or create a signal in the currently active container '''
         c = self.get_active()
         return c[name]
+    
+    def reset_all(self):
+        ''' Reset all wires in the contain '''
+        for key, container in self._cs.items():
+            container.reset_all()

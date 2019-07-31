@@ -21,3 +21,9 @@ class Test_SignalContainer(unittest.TestCase):
         sc = fastwire.SignalContainer()
         signal = sc.signal('this_name')
         self.assertEqual(signal.name, 'this_name')
+        
+    def test_create_on_demand(self):
+        sc = fastwire.SignalContainer()
+        signal = sc['this_name']
+        self.assertEqual(signal.name, 'this_name')
+        self.assertEqual(signal.__class__, fastwire.Signal)

@@ -13,10 +13,79 @@ references are removed automatically.
 
 import weakref
 
+
+class SignalBox():
+    ''' A collection of SignalContainers 
+    
+    It's used to allow client classes to create sets of signals for specific
+    instances. Other classes instantiated can call an instance of this class
+    to get signals within the appropriate set. This can help to avoid
+    signals getting mixed up.
+    '''
+    def __init__(self):
+        self._scs = {}
+        self._active = None
+        
+    def add(self, cid, activate=True, remove_with=None):
+        ''' Add a new SignalContainer referenced with cid
+        
+        Args:
+            cid (int, str): A reference for the container
+            activate (bool): Set the container as the active one
+            remove_with (object): An object to associate the container with.
+                When the object is garbage collected, its container and
+                all signals within it will also be removed. This can be useful
+                to avoid objects accumulating in memory.
+        '''
+        sc = SignalContainer()
+        self._scs[cid] = sc
+        if remove_with is not None:
+            weakref.finalize(remove_with, self.remove, cid=cid)
+        if activate:
+            self.set_active(cid)
+        return sc
+        
+    def remove(self, cid):
+        ''' Remove a container 
+        
+        Args:
+            cid (int, str): The container reference '''
+        del self._scs[cid]
+        
+    def set_active(self, cid):
+        ''' Set the active container 
+        
+        Args:
+            cid(int, str): The container reference
+        '''
+        self._active = cid
+        
+    def get_active(self):
+        ''' Return the currently active container '''
+        if self._active is None:
+            return None
+        return self._scs[self._active]
+        
+    def signal(self, name=None, doc=None, **kwargs):
+        ''' Create a Signal instance in the currently active container
+        
+        Args:
+            name (str): A name of the wire [optional]
+            doc (str): A documentation string for the wire [optional]
+        '''
+        cs = self.get_active()
+        return cs.signal(name=name, doc=doc, **kwargs)
+    
+    def __getitem__(self, name):
+        ''' Get or create a signal in the currently active container '''
+        cs = self.get_active()
+        return cs[name]
+    
+
 class SignalContainer(dict):
     ''' A dictionary-like collection of Signal instances '''
     
-    def signal(self, name=None, **kwargs):
+    def signal(self, name=None, doc=None, **kwargs):
         ''' Get a new Signal instance 
         
         Args:
@@ -24,7 +93,7 @@ class SignalContainer(dict):
             doc (str): A documentation string for the wire [optional]
         '''
         name = len(self) if name is None else name
-        s = Signal(name=name, **kwargs)
+        s = Signal(name=name, doc=doc, **kwargs)
         self[name] = s
         return s
     

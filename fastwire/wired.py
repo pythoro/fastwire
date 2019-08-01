@@ -8,6 +8,8 @@ This module provides mix-in classes to facilitate the decoration of methods.
 
 """
 
+from .decorate import ensure_signal_obj
+
 class Wired():
     ''' The mix-in class that enables method decoration to work '''
     
@@ -17,11 +19,7 @@ class Wired():
             try:
                 sigs = inst.__getattribute__('_connected_signals')
                 for name, s, box, container, receiver_kwargs in sigs:
-                    if isinstance(s, str) or isinstance(s, int):
-                        if box is not None:
-                            s = box[s]
-                        elif container is not None:
-                            s = container[s]
+                    s = ensure_signal_obj(s, box, container)
                     s.connect(inst.__getattribute__(name), **receiver_kwargs)
             except AttributeError:
                 pass

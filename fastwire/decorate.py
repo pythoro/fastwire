@@ -9,6 +9,15 @@ automatically connecting methods and functions.
 
 """
 
+def ensure_signal_obj(signal, box, container, receiver_limit=None):
+    if isinstance(signal, str) or isinstance(signal, int):
+        if box is not None:
+            s = box.new(name=signal, receiver_limit=receiver_limit)
+        elif container is not None:
+            s = container.new(name=signal, receiver_limit=receiver_limit)
+        return s
+    return signal
+
 
 def receive(s, box=None, container=None, **receiver_kwargs):
     ''' A decorator to connect methods to Signal instances automatically 
@@ -50,6 +59,7 @@ def supply(s, box=None, container=None, **receiver_kwargs):
         **receiver_kwargs: Any number of key word arguments. These are passed
             to any Condition instances added to the Signal instance.
     '''
+    s = ensure_signal_obj(s, box, container, receiver_limit=1)
     if s._receiver_limit != 1:
         raise KeyError('Signal must be set to have only 1 supplier.')
     return receive(s, box, container, **receiver_kwargs)
@@ -69,11 +79,7 @@ def fn_receive(s, box=None, container=None, **receiver_kwargs):
         s = [s]
     def decorator(fn):
         for signal in s:
-            if isinstance(signal, str) or isinstance(signal, int):
-                if box is not None:
-                    signal = box[signal]
-                elif container is not None:
-                    signal = container[signal]
+            signal = ensure_signal_obj(signal, box, container)
             signal.connect(fn, **receiver_kwargs)
         return fn
     return decorator
@@ -87,6 +93,7 @@ def fn_supply(s, box=None, container=None, **receiver_kwargs):
         **receiver_kwargs: Any number of key word arguments. These are passed
             to any Condition instances added to the Signal instance.
     '''
+    s = ensure_signal_obj(s, box, container, receiver_limit=1)
     if s._receiver_limit != 1:
         raise KeyError('Signal must be set to have only 1 supplier.')
     return fn_receive(s, box, container, **receiver_kwargs)

@@ -22,7 +22,7 @@ class Wire():
             doc (str): A documentation string for the wire [optional]    
     '''
     
-    def __init__(self, name=None, doc=None):
+    def __init__(self, name=None, doc=None, **kwargs):
         self._name = name
         self._doc = doc
         self._receiver_limit = 1

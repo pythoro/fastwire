@@ -51,9 +51,9 @@ class Container(dict):
         Args:
             key: The name of the signal
         '''
-        if name in self:
+        try:
             return super().__getitem__(name)
-        else:
+        except KeyError:
             s = s = self._signal_cls(name=name)
             super().__setitem__(name, s)
             return s

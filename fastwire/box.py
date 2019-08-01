@@ -86,8 +86,7 @@ class Box():
     
     def __getitem__(self, name):
         ''' Get or create a signal in the currently active container '''
-        c = self.get_active()
-        return c[name]
+        return self._cs[self._active][name]
     
     def reset_all(self):
         ''' Reset all wires in the contain '''

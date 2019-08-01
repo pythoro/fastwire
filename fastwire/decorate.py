@@ -12,9 +12,9 @@ automatically connecting methods and functions.
 def ensure_signal_obj(signal, box, container, receiver_limit=None):
     if isinstance(signal, str) or isinstance(signal, int):
         if box is not None:
-            s = box.new(name=signal, receiver_limit=receiver_limit)
+            s = box.get(name=signal, receiver_limit=receiver_limit)
         elif container is not None:
-            s = container.new(name=signal, receiver_limit=receiver_limit)
+            s = container.get(name=signal, receiver_limit=receiver_limit)
         return s
     return signal
 
@@ -59,9 +59,6 @@ def supply(s, box=None, container=None, **receiver_kwargs):
         **receiver_kwargs: Any number of key word arguments. These are passed
             to any Condition instances added to the Signal instance.
     '''
-    s = ensure_signal_obj(s, box, container, receiver_limit=1)
-    if s._receiver_limit != 1:
-        raise KeyError('Signal must be set to have only 1 supplier.')
     return receive(s, box, container, **receiver_kwargs)
 
 

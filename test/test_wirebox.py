@@ -39,6 +39,27 @@ class Test_WireBox(unittest.TestCase):
         self.assertEqual(wire.name, 'this_name')
         self.assertEqual(wire.__class__, fastwire.Wire)
 
+    def test_create_on_demand_repeated(self):
+        wb = fastwire.WireBox()
+        wc = wb.add(id(self))
+        wire_1 = wb['this_name']
+        wire_2 = wb['this_name']
+        self.assertEqual(wire_1, wire_2)
+
+    def test_get(self):
+        wb = fastwire.WireBox()
+        wc = wb.add(id(self))
+        wire = wb.get('this_name')
+        self.assertEqual(wire.name, 'this_name')
+        self.assertEqual(wire.__class__, fastwire.Wire)
+
+    def test_get_repeated(self):
+        wb = fastwire.WireBox()
+        wc = wb.add(id(self))
+        wire_1 = wb.get('this_name')
+        wire_2 = wb.get('this_name')
+        self.assertEqual(wire_1, wire_2)
+
     def test_remove(self):
         wb = fastwire.WireBox()
         wb.add(0)

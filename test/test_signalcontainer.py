@@ -27,3 +27,14 @@ class Test_SignalContainer(unittest.TestCase):
         signal = sc['this_name']
         self.assertEqual(signal.name, 'this_name')
         self.assertEqual(signal.__class__, fastwire.Signal)
+
+    def test_get(self):
+        sc = fastwire.SignalContainer()
+        wire = sc.get('this_name')
+        self.assertEqual(wire.name, 'this_name')
+        
+    def test_get_repeated(self):
+        sc = fastwire.SignalContainer()
+        wire_1 = sc.get('this_name')
+        wire_2 = sc.get('this_name')
+        self.assertEqual(wire_1, wire_2)

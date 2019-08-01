@@ -197,7 +197,7 @@ class SignalContainer(container.Container):
         super().__init__(signal_cls=Signal)
         
     def signal(self, name=None, doc=None, **kwargs):    
-        return self.new(name=name, doc=doc, **kwargs)
+        return self.get(name=name, doc=doc, **kwargs)
     
 
 class SignalBox(box.Box):
@@ -207,7 +207,7 @@ class SignalBox(box.Box):
         super().__init__(container_cls=SignalContainer)
                 
     def signal(self, name=None, doc=None, **kwargs):
-        return self.new(name=name, doc=doc, **kwargs)
+        return self.get(name=name, doc=doc, **kwargs)
     
     
 default_container = SignalContainer()

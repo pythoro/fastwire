@@ -129,6 +129,7 @@ class Test_Box_Decorators(unittest.TestCase):
 
         a = A()
         signal = box['test_signal']
+        self.assertEqual(signal.name, 'test_signal')
         self.assertEqual(len(signal._receivers.keys()), 1)
         val = 5.7
         signal.emit(a=val)
@@ -161,6 +162,7 @@ class Test_Box_Decorators(unittest.TestCase):
 
         a = A()
         signal = box['test_signal']
+        self.assertEqual(signal.name, 'test_signal')
         self.assertEqual(len(signal._receivers.keys()), 1)
         val = 5.7
         signal.emit(a=val)

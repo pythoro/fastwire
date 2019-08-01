@@ -39,6 +39,27 @@ class Test_SignalBox(unittest.TestCase):
         self.assertEqual(signal.name, 'this_name')
         self.assertEqual(signal.__class__, fastwire.Signal)
 
+    def test_create_on_demand_repeated(self):
+        sb = fastwire.SignalBox()
+        sc = sb.add(id(self))
+        wire_1 = sb['this_name']
+        wire_2 = sb['this_name']
+        self.assertEqual(wire_1, wire_2)
+
+    def test_get(self):
+        sb = fastwire.SignalBox()
+        sc = sb.add(id(self))
+        wire = sb.get('this_name')
+        self.assertEqual(wire.name, 'this_name')
+        self.assertEqual(wire.__class__, fastwire.Signal)
+
+    def test_get_repeated(self):
+        sb = fastwire.SignalBox()
+        sc = sb.add(id(self))
+        wire_1 = sb.get('this_name')
+        wire_2 = sb.get('this_name')
+        self.assertEqual(wire_1, wire_2)
+
     def test_remove(self):
         sb = fastwire.SignalBox()
         sb.add(0)

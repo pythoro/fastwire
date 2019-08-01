@@ -27,3 +27,14 @@ class Test_WireContainer(unittest.TestCase):
         wire = sc['this_name']
         self.assertEqual(wire.name, 'this_name')
         self.assertEqual(wire.__class__, fastwire.Wire)
+        
+    def test_get(self):
+        sc = fastwire.WireContainer()
+        wire = sc.get('this_name')
+        self.assertEqual(wire.name, 'this_name')
+        
+    def test_get_repeated(self):
+        sc = fastwire.WireContainer()
+        wire_1 = sc.get('this_name')
+        wire_2 = sc.get('this_name')
+        self.assertEqual(wire_1, wire_2)

@@ -39,8 +39,8 @@ class Wire():
             receiver (callable): A receiver called by the wire.
         '''
         if self.emit != self._emit:
-            raise AttributeError('Wire instance is already connected and'
-                                 + 'must first be disconnected.')
+            raise AttributeError('Wire instance "' + str(self.name) + '" is already'
+                                 ' connected and must first be disconnected.')
         self.emit = receiver
         self.fetch = receiver
         self.receivers_present = True
@@ -82,7 +82,7 @@ class WireContainer(container.Container):
         super().__init__(signal_cls=Wire)
         
     def wire(self, name=None, doc=None, **kwargs):    
-        return self.new(name=name, doc=doc, **kwargs)
+        return self.get(name=name, doc=doc, **kwargs)
 
     
 class WireBox(box.Box):
@@ -92,7 +92,7 @@ class WireBox(box.Box):
         super().__init__(container_cls=WireContainer)
     
     def wire(self, name=None, doc=None, **kwargs):
-        return self.new(name=name, doc=doc, **kwargs)
+        return self.get(name=name, doc=doc, **kwargs)
 
 
 default_wire_container = WireContainer()

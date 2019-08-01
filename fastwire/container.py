@@ -18,14 +18,16 @@ class Container(dict):
         self.supply = functools.partial(decorate.supply, container=self)
 
     
-    def new(self, name=None, doc=None, **kwargs):
-        ''' Get a new Signal instance 
+    def get(self, name=None, doc=None, **kwargs):
+        ''' Get or create a new Signal instance 
         
         Args:
             name (str): A name of the wire [optional]
             doc (str): A documentation string for the wire [optional]
         '''
         name = len(self) if name is None else name
+        if name in self:
+            return self[name]
         s = self._signal_cls(name=name, doc=doc, **kwargs)
         self[name] = s
         return s

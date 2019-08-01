@@ -73,8 +73,8 @@ class Box():
             return None
         return self._cs[self._active]
         
-    def new(self, name=None, doc=None, **kwargs):
-        ''' Create a new wire/signal instance in the currently active container
+    def get(self, name=None, doc=None, **kwargs):
+        ''' Create or get a new wire/signal instance in the currently active container
         
         Args:
             name (str): A name of the wire/signal [optional]
@@ -82,7 +82,7 @@ class Box():
             **kwargs: Optional key word arguments.
         '''
         c = self.get_active()
-        return c.new(name=name, doc=doc, **kwargs)
+        return c.get(name=name, doc=doc, **kwargs)
     
     def __getitem__(self, name):
         ''' Get or create a signal in the currently active container '''

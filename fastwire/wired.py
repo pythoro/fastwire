@@ -18,11 +18,15 @@ class Wired():
         def register_signals(inst):
             try:
                 sigs = inst.__getattribute__('_connected_signals')
-                for name, s, box, container, receiver_kwargs in sigs:
-                    s = ensure_signal_obj(s, box, container)
-                    s.connect(inst.__getattribute__(name), **receiver_kwargs)
             except AttributeError:
-                pass
+                return
+            for name, s, box, container, receiver_kwargs in sigs:
+                if 'receiver_limit' in receiver_kwargs:
+                    receiver_limit = receiver_kwargs['receiver_limit']
+                else:
+                    receiver_limit = None
+                s = ensure_signal_obj(s, box, container, receiver_limit)
+                s.connect(inst.__getattribute__(name), **receiver_kwargs)
         
         try:
             inst = super().__new__(cls, *args, **kwargs)

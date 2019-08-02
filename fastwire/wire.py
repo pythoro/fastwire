@@ -20,12 +20,16 @@ class Wire():
         Args:
             name (str): A name of the wire [optional]
             doc (str): A documentation string for the wire [optional]    
+            **attributes: Optional key word arguments, which are stored
+                as attributes of the signal.
+
     '''
     
-    def __init__(self, name=None, doc=None, **kwargs):
+    def __init__(self, name=None, doc=None, attrs=None, **kwargs):
         self._name = name
         self._doc = doc
         self._receiver_limit = 1
+        self._attrs = attrs
         self.reset()
         
     def _emit(self):
@@ -74,6 +78,16 @@ class Wire():
         ''' The wire name '''
         return self._name
 
+    @property
+    def doc(self):
+        ''' The wire documentation '''
+        return self._doc
+
+    @property
+    def attrs(self):
+        ''' The wire documentation '''
+        return self._attrs
+
 
 class WireContainer(container.Container):
     ''' A dictionary-like collection of Signal instances '''
@@ -81,8 +95,15 @@ class WireContainer(container.Container):
     def __init__(self):
         super().__init__(signal_cls=Wire)
         
-    def wire(self, name=None, doc=None, **kwargs):    
-        return self.get(name=name, doc=doc, **kwargs)
+    def wire(self, name=None, doc=None, attrs=None, **kwargs):    
+        ''' Create or get a new wire instance
+        
+        Args:
+            name (str): A name of the wire/signal [optional]
+            doc (str): A documentation string for the wire/signal [optional]
+            attrs (dict): Optional diction of signal attributes.
+        '''
+        return self.get(name=name, doc=doc, attrs=attrs, **kwargs)
 
     
 class WireBox(box.Box):
@@ -91,8 +112,15 @@ class WireBox(box.Box):
     def __init__(self):
         super().__init__(container_cls=WireContainer)
     
-    def wire(self, name=None, doc=None, **kwargs):
-        return self.get(name=name, doc=doc, **kwargs)
+    def wire(self, name=None, doc=None, attrs=None, **kwargs):
+        ''' Create or get a new signal instancein the active container
+        
+        Args:
+            name (str): A name of the wire/signal [optional]
+            doc (str): A documentation string for the wire/signal [optional]
+            attrs (dict): Optional diction of signal attributes.
+        '''
+        return self.get(name=name, doc=doc, attrs=attrs, **kwargs)
 
 
 default_wire_container = WireContainer()

@@ -17,6 +17,33 @@ class Test_WireBox(unittest.TestCase):
         wc = wb.add(id(self))
         self.assertEqual(wb.__class__, fastwire.WireBox)
         
+    def test_get_name_arg(self):
+        wb = fastwire.WireBox() # use default container
+        wire = wb.get('test_name')
+        self.assertEqual(wire.name, 'test_name')
+        
+    def test_get_name_kwarg(self):
+        wb = fastwire.WireBox() # use default container
+        wire = wb.get(name='test_name')
+        self.assertEqual(wire.name, 'test_name')
+
+    def test_get_doc_arg(self):
+        wb = fastwire.WireBox() # use default container
+        wire = wb.get('test_name', 'test_doc')
+        self.assertEqual(wire.doc, 'test_doc')
+        
+    def test_get_doc_kwarg(self):
+        wb = fastwire.WireBox() # use default container
+        wire = wb.get(name='test_name', doc='test_doc')
+        self.assertEqual(wire.doc, 'test_doc')
+        
+    def test_get_attrs_kwarg(self):
+        dct = {'a': 5}
+        wb = fastwire.WireBox() # use default container
+        wire = wb.get(name='test_name', attrs=dct)
+        self.assertEqual(wire.attrs, dct)
+        
+        
     def test_activate(self):
         wb = fastwire.WireBox()
         wc = wb.add(id(self))

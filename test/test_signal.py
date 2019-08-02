@@ -12,6 +12,28 @@ import unittest
 
 class Test_Signal(unittest.TestCase):
     
+    
+    def test_name_arg(self):
+        signal = fastwire.Signal('test_name')
+        self.assertEqual(signal.name, 'test_name')
+        
+    def test_name_kwarg(self):
+        signal = fastwire.Signal(name='test_name')
+        self.assertEqual(signal.name, 'test_name')
+
+    def test_doc_arg(self):
+        signal = fastwire.Signal('test_name', 'test_doc')
+        self.assertEqual(signal.doc, 'test_doc')
+        
+    def test_doc_kwarg(self):
+        signal = fastwire.Signal(name='test_name', doc='test_doc')
+        self.assertEqual(signal.doc, 'test_doc')
+        
+    def test_attrs_kwarg(self):
+        dct = {'a': 5}
+        signal = fastwire.Signal(name='test_name', attrs=dct)
+        self.assertEqual(signal.attrs, dct)
+    
     def test_method_connect(self):
         signal = fastwire.Signal()
 

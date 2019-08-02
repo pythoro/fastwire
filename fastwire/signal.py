@@ -24,13 +24,20 @@ class Signal():
             doc (str): A documentation string for the wire [optional]
             receiver_limit (int): Limit the number of receivers [optional]
             condition (Condition): An optional signal Condition.
+            attrs (dict): Optional dictionary of signal attributes.
     '''
     
-    def __init__(self, name=None, doc=None, receiver_limit=None, condition=None):
+    def __init__(self,
+                 name=None,
+                 doc=None,
+                 receiver_limit=None,
+                 condition=None,
+                 attrs=None):
         self.reset()
         self._name = name
         self._doc = doc
         self._receiver_limit = receiver_limit
+        self._attrs = attrs
         if condition is not None:
             self.add_condition(condition)
     
@@ -96,6 +103,16 @@ class Signal():
     def name(self):
         ''' The signal name '''
         return self._name
+
+    @property
+    def doc(self):
+        ''' The signal documentation '''
+        return self._doc
+    
+    @property
+    def attrs(self):
+        ''' The signal documentation '''
+        return self._attrs
     
     def disconnect(self, receiver_id):
         ''' Disconnect a receiver 
@@ -196,8 +213,15 @@ class SignalContainer(container.Container):
     def __init__(self):
         super().__init__(signal_cls=Signal)
         
-    def signal(self, name=None, doc=None, **kwargs):    
-        return self.get(name=name, doc=doc, **kwargs)
+    def signal(self, name=None, doc=None, attrs=None, **kwargs):    
+        ''' Create or get a new signal instance
+        
+        Args:
+            name (str): A name of the wire/signal [optional]
+            doc (str): A documentation string for the wire/signal [optional]
+            attrs (dict): Optional diction of signal attributes.
+        '''
+        return self.get(name=name, doc=doc, attrs=attrs, **kwargs)
     
 
 class SignalBox(box.Box):
@@ -206,8 +230,15 @@ class SignalBox(box.Box):
     def __init__(self):
         super().__init__(container_cls=SignalContainer)
                 
-    def signal(self, name=None, doc=None, **kwargs):
-        return self.get(name=name, doc=doc, **kwargs)
+    def signal(self, name=None, doc=None, attrs=None, **kwargs):
+        ''' Create or get a new signal instance in the active container
+        
+        Args:
+            name (str): A name of the wire/signal [optional]
+            doc (str): A documentation string for the wire/signal [optional]
+            attrs (dict): Optional diction of signal attributes.
+        '''
+        return self.get(name=name, doc=doc, attrs=attrs, **kwargs)
     
     
 default_container = SignalContainer()

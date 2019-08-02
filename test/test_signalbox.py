@@ -16,6 +16,32 @@ class Test_SignalBox(unittest.TestCase):
         sb = fastwire.SignalBox()
         sc = sb.add(id(self))
         self.assertEqual(sb.__class__, fastwire.SignalBox)
+                
+    def test_get_name_arg(self):
+        sb = fastwire.SignalBox() # use default container
+        signal = sb.get('test_name')
+        self.assertEqual(signal.name, 'test_name')
+        
+    def test_get_name_kwarg(self):
+        sb = fastwire.SignalBox() # use default container
+        signal = sb.get(name='test_name')
+        self.assertEqual(signal.name, 'test_name')
+
+    def test_get_doc_arg(self):
+        sb = fastwire.SignalBox() # use default container
+        signal = sb.get('test_name', 'test_doc')
+        self.assertEqual(signal.doc, 'test_doc')
+        
+    def test_get_doc_kwarg(self):
+        sb = fastwire.SignalBox() # use default container
+        signal = sb.get(name='test_name', doc='test_doc')
+        self.assertEqual(signal.doc, 'test_doc')
+        
+    def test_get_attrs_kwarg(self):
+        dct = {'a': 5}
+        sb = fastwire.SignalBox() # use default container
+        signal = sb.get(name='test_name', attrs=dct)
+        self.assertEqual(signal.attrs, dct)
         
     def test_activate(self):
         sb = fastwire.SignalBox()

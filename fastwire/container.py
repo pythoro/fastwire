@@ -18,17 +18,22 @@ class Container(dict):
         self.supply = functools.partial(decorate.supply, container=self)
 
     
-    def get(self, name=None, doc=None, attrs=None, **kwargs):
+    def get(self, name=None, doc=None, attrs=None, must_exist=False, **kwargs):
         ''' Get or create a new Signal or Wire instance 
         
         Args:
             name (str): A name of the wire [optional]
             doc (str): A documentation string for the wire [optional]
             attrs (dict): Optional diction of signal attributes.
+            must_exist (bool): True if the signal must already exist
         '''
         name = len(self) if name is None else name
         if name in self:
             return self[name]
+        else:
+            if must_exist:
+                raise KeyError('Signal "' + str(name) + '" must exist ' +
+                               'already.')
         s = self._signal_cls(name=name, doc=doc, attrs=attrs, **kwargs)
         self[name] = s
         return s

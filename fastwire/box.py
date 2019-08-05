@@ -29,7 +29,7 @@ class Box():
     def containers(self):
         return self._cs
         
-    def add(self, cid, activate=True, remove_with=None):
+    def add(self, cid=None, activate=True, remove_with=None):
         ''' Add a new container referenced with cid
         
         Args:
@@ -41,13 +41,18 @@ class Box():
                 to avoid objects accumulating in memory.
         '''
         c = self._container_cls()
+        cid = len(self._cs) if cid is None else cid
         self._cs[cid] = c
         if remove_with is not None:
-            weakref.finalize(remove_with, self.remove, cid=cid)
+            self.remove_with(remove_with, cid=cid)
         if activate:
             self.set_active(cid)
         return c
         
+    def remove_with(self, obj, cid=None):
+        cid = self._active if cid is None else cid
+        weakref.finalize(obj, self.remove, cid=cid)
+
     def remove(self, cid):
         ''' Remove a container
         
@@ -66,6 +71,10 @@ class Box():
             cid(int, str): The container reference
         '''
         self._active = cid
+        
+    @property
+    def active(self):
+        return self._active
         
     def get_active(self):
         ''' Return the currently active container '''

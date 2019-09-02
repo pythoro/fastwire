@@ -61,7 +61,10 @@ class Box():
         
         Args:
             cid (int, str): The container reference '''
-        del self._cs[cid]
+        try:
+            del self._cs[cid]
+        except KeyError:
+            pass
         self.set_active('default')
         
     def set_active(self, cid):

@@ -12,7 +12,7 @@ hold normal a normal reference to the callable.
 
 
 from . import box, container
-
+from . import settings
 
 class Wire():
     ''' A simple instance that can be connected to one receiver 
@@ -43,8 +43,9 @@ class Wire():
             receiver (callable): A receiver called by the wire.
         '''
         if self.emit != self._emit:
-            raise AttributeError('Wire instance "' + str(self.name) + '" is already'
-                                 ' connected and must first be disconnected.')
+            if settings.PREVENT_WIRE_RECONNECT:
+                raise AttributeError('Wire instance "' + str(self.name) + '" is already'
+                                     ' connected and must first be disconnected.')
         self.emit = receiver
         self.fetch = receiver
         self.receivers_present = True

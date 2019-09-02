@@ -5,6 +5,7 @@ Created on Sun Jul 21 22:06:32 2019
 @author: Reuben
 """
 
+from . import settings
 from .box import Box
 from .container import Container
 from .wire import WireBox, WireContainer, Wire, wire

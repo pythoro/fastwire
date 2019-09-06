@@ -53,16 +53,6 @@ class Container(dict):
         for key, signal in self.items():
             signal.reset()
     
-    def __getitem__(self, name):
-        ''' Get or create a Signal instance 
+    def __missing__(self, key):
+        return self.get(key)
         
-        Args:
-            key: The name of the signal
-        '''
-        try:
-            return super().__getitem__(name)
-        except KeyError:
-            s = s = self._signal_cls(name=name)
-            super().__setitem__(name, s)
-            return s
-            

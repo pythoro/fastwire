@@ -184,3 +184,9 @@ signal.emit(a=3)
 # Class A instance received a 3
 # test_fun got a 3
 ```
+
+## Documentation
+
+Documentation is hosted at ReadTheDocs.org.
+
+https://fastwire.readthedocs.io/en/latest/

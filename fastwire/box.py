@@ -21,6 +21,7 @@ class Box():
     def __init__(self, container_cls):
         self._container_cls = container_cls
         self._cs = {}
+        self._next_cid = 0
         self.add('default')
         self.receive = functools.partial(decorate.receive, box=self)
         self.supply = functools.partial(decorate.supply, box=self)
@@ -41,7 +42,8 @@ class Box():
                 to avoid objects accumulating in memory.
         '''
         c = self._container_cls()
-        cid = len(self._cs) if cid is None else cid
+        cid = self._next_cid if cid is None else cid
+        self._next_cid += 1
         self._cs[cid] = c
         if remove_with is not None:
             self.remove_with(remove_with, cid=cid)
@@ -56,16 +58,12 @@ class Box():
     def remove(self, cid):
         ''' Remove a container
         
-        Note:
-            This sets the active container to 'default'.
-        
         Args:
             cid (int, str): The container reference '''
         try:
             del self._cs[cid]
         except KeyError:
             pass
-        self.set_active('default')
         
     def set_active(self, cid):
         ''' Set the active container 

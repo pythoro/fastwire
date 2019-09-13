@@ -102,3 +102,8 @@ class Box():
         ''' Reset all wires in the contain '''
         for key, container in self._cs.items():
             container.reset_all()
+            
+    def get_container(self, cid):
+        if cid not in self._cs:
+            self.add(cid=cid, activate=False)
+        return self._cs[cid]

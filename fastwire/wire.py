@@ -124,5 +124,17 @@ class WireBox(box.Box):
         return self.get(name=name, doc=doc, attrs=attrs, **kwargs)
 
 
-default_wire_container = WireContainer()
+wire_boxes = {}
+
+def wire_box(name):
+    if name not in wire_boxes:
+        wire_boxes[name] = WireBox()
+    return wire_boxes[name]
+
+def wire_container(name):
+    box = wire_box('default')
+    return box.get_container(name)
+
+default_wire_box = wire_box('default')
+default_wire_container = wire_container('default')
 wire = default_wire_container.wire

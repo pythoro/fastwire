@@ -241,5 +241,17 @@ class SignalBox(box.Box):
         return self.get(name=name, doc=doc, attrs=attrs, **kwargs)
     
     
-default_container = SignalContainer()
-signal = default_container.signal
+signal_boxes = {}
+
+def signal_box(name):
+    if name not in signal_boxes:
+        signal_boxes[name] = SignalBox()
+    return signal_boxes[name]
+
+def signal_container(name):
+    box = signal_box('default')
+    return box.get_container(name)
+
+default_signal_box = signal_box('default')
+default_signal_container = signal_container('default')
+signal = default_signal_container.signal

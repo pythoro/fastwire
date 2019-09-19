@@ -93,8 +93,8 @@ class Wire():
 class WireContainer(container.Container):
     ''' A dictionary-like collection of Signal instances '''
     
-    def __init__(self):
-        super().__init__(signal_cls=Wire)
+    def __init__(self, cid=None):
+        super().__init__(signal_cls=Wire, cid=cid)
         
     def wire(self, name=None, doc=None, attrs=None, **kwargs):    
         ''' Create or get a new wire instance

@@ -210,8 +210,8 @@ class Signal():
 class SignalContainer(container.Container):
     ''' A dictionary-like collection of Signal instances '''
     
-    def __init__(self):
-        super().__init__(signal_cls=Signal)
+    def __init__(self, cid=None):
+        super().__init__(signal_cls=Signal, cid=cid)
         
     def signal(self, name=None, doc=None, attrs=None, **kwargs):    
         ''' Create or get a new signal instance

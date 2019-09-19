@@ -40,11 +40,17 @@ class Box():
                 When the object is garbage collected, its container and
                 all signals within it will also be removed. This can be useful
                 to avoid objects accumulating in memory.
+                
+        Returns:
+            Container: The container
+            
+        Note:
+            Container id is available via container.id.
         '''
-        c = self._container_cls()
         cid = self._next_cid if cid is None else cid
-        self._next_cid += 1
+        c = self._container_cls(cid)
         self._cs[cid] = c
+        self._next_cid += 1
         if remove_with is not None:
             self.remove_with(remove_with, cid=cid)
         if activate:
@@ -103,7 +109,9 @@ class Box():
         for key, container in self._cs.items():
             container.reset_all()
             
-    def get_container(self, cid):
+    def get_container(self, cid=None):
+        if cid is None:
+            return self.get_active()
         if cid not in self._cs:
             self.add(cid=cid, activate=False)
         return self._cs[cid]

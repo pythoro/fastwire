@@ -12,8 +12,9 @@ from . import decorate
 class Container(dict):
     ''' A dictionary-like collection of Signal instances '''
     
-    def __init__(self, signal_cls):
+    def __init__(self, signal_cls, cid=None):
         self._signal_cls = signal_cls
+        self.id = cid
         self.receive = functools.partial(decorate.receive, container=self)
         self.supply = functools.partial(decorate.supply, container=self)
 

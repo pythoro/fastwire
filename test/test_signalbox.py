@@ -12,10 +12,26 @@ import unittest
 
 class Test_SignalBox(unittest.TestCase):
     
-    def test_create(self):
-        sb = fastwire.SignalBox()
-        sc = sb.add(id(self))
-        self.assertEqual(sb.__class__, fastwire.SignalBox)
+    def test_create_auto(self):
+        b = fastwire.SignalBox()
+        c = b.add()
+        self.assertEqual(c.__class__, fastwire.SignalContainer)
+        self.assertEqual(c.id, 1)
+        self.assertEqual(b.get_container(0), c)
+
+    def test_create_cid_int(self):
+        b = fastwire.SignalBox()
+        c = b.add(456)
+        self.assertEqual(c.__class__, fastwire.SignalContainer)
+        self.assertEqual(c.id, 456)
+        self.assertEqual(b.get_container(456), c)
+
+    def test_create_cid_str(self):
+        b = fastwire.SignalBox()
+        c = b.add('a_string')
+        self.assertEqual(c.__class__, fastwire.SignalContainer)
+        self.assertEqual(c.id, 'a_string')
+        self.assertEqual(b.get_container('a_string'), c)
                 
     def test_get_name_arg(self):
         sb = fastwire.SignalBox() # use default container
@@ -45,11 +61,11 @@ class Test_SignalBox(unittest.TestCase):
         
     def test_activate(self):
         sb = fastwire.SignalBox()
-        sc = sb.add(id(self))
-        sc2 = sb.add(3049)
-        sb.set_active(id(self))
-        sc_check = sb.get_active()
-        self.assertEqual(sc, sc_check)
+        cid1 = sb.add()
+        cid2 = sb.add(3049)
+        sb.set_active(cid1)
+        check = sb._active
+        self.assertEqual(cid1, check)
         
     def test_create_signal(self):
         sb = fastwire.SignalBox()

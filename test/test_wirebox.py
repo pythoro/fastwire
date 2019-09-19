@@ -12,10 +12,26 @@ import unittest
 
 class Test_WireBox(unittest.TestCase):
     
-    def test_create(self):
-        wb = fastwire.WireBox()
-        wc = wb.add(id(self))
-        self.assertEqual(wb.__class__, fastwire.WireBox)
+    def test_create_auto(self):
+        b = fastwire.WireBox()
+        c = b.add()
+        self.assertEqual(c.__class__, fastwire.WireContainer)
+        self.assertEqual(c.id, 1)
+        self.assertEqual(b.get_container(0), c)
+
+    def test_create_cid_int(self):
+        b = fastwire.WireBox()
+        c = b.add(456)
+        self.assertEqual(c.__class__, fastwire.WireContainer)
+        self.assertEqual(c.id, 456)
+        self.assertEqual(b.get_container(456), c)
+
+    def test_create_cid_str(self):
+        b = fastwire.WireBox()
+        c = b.add('a_string')
+        self.assertEqual(c.__class__, fastwire.WireContainer)
+        self.assertEqual(c.id, 'a_string')
+        self.assertEqual(b.get_container('a_string'), c)
         
     def test_get_name_arg(self):
         wb = fastwire.WireBox() # use default container
@@ -43,14 +59,13 @@ class Test_WireBox(unittest.TestCase):
         wire = wb.get(name='test_name', attrs=dct)
         self.assertEqual(wire.attrs, dct)
         
-        
     def test_activate(self):
         wb = fastwire.WireBox()
-        wc = wb.add(id(self))
-        sc2 = wb.add(3049)
-        wb.set_active(id(self))
-        sc_check = wb.get_active()
-        self.assertEqual(wc, sc_check)
+        cid1 = wb.add()
+        cid2 = wb.add(3049)
+        wb.set_active(cid1)
+        check = wb._active
+        self.assertEqual(cid1, check)
         
     def test_create_wire(self):
         wb = fastwire.WireBox()

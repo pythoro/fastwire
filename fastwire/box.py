@@ -68,6 +68,8 @@ class Box():
             cid (int, str): The container reference '''
         try:
             del self._cs[cid]
+            if cid == self._active:
+                self._active = 'default'
         except KeyError:
             pass
         
@@ -115,3 +117,6 @@ class Box():
         if cid not in self._cs:
             self.add(cid=cid, activate=False)
         return self._cs[cid]
+    
+    def clear(self):
+        self._cs.clear()

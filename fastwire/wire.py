@@ -10,9 +10,11 @@ hold normal a normal reference to the callable.
 
 """
 
+import warnings
 
 from . import box, container
 from . import settings
+
 
 class Wire():
     ''' A simple instance that can be connected to one receiver 
@@ -43,9 +45,10 @@ class Wire():
             receiver (callable): A receiver called by the wire.
         '''
         if self.emit != self._emit:
-            if settings.PREVENT_WIRE_RECONNECT:
-                raise AttributeError('Wire instance "' + str(self.name) + '" is already'
-                                     ' connected and must first be disconnected.')
+            if settings.WARN_WIRE_RECONNECT:
+                warnings.warn('FASTWIRE: Wire "' + str(self.name)
+                + '" was already connected and was reconnected. Use a Signal'
+                + ' if multiple connections are required.', stacklevel=2)
         self.emit = receiver
         self.fetch = receiver
         self.receivers_present = True

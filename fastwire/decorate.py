@@ -28,6 +28,7 @@ def receive(s, box=None, container=None, **receiver_kwargs):
         container (Container): [Optional] The container for the signal.
         **receiver_kwargs: Any number of key word arguments. These are passed
             to any Condition instances added to the Signal instance.
+            
     '''
     if not isinstance(s, list):
         s = [s]
@@ -40,14 +41,14 @@ def receive(s, box=None, container=None, **receiver_kwargs):
         def __set_name__(self, owner, name):
             # Called at class creation
             if not hasattr(owner, '_connected_signals'):
-                owner._connected_signals = []
+                owner._connected_signals = {}
             else:
                 # Copy the list in case we're in a subclass
                 # We don't want to append it to the superclass
                 owner._connected_signals = owner._connected_signals.copy()
             cs = owner._connected_signals
             for signal in s:
-                cs.append([name, signal, box, container, receiver_kwargs])
+                cs[name] = [signal, box, container, receiver_kwargs]
             setattr(owner, name, self.fn) # Replace decorator with original function
         
     return Decorator

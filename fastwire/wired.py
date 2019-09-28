@@ -20,7 +20,7 @@ class Wired():
                 sigs = inst.__getattribute__('_connected_signals')
             except AttributeError:
                 return
-            for name, s, box, container, receiver_kwargs in sigs:
+            for name, (s, box, container, receiver_kwargs) in sigs.items():
                 if 'receiver_limit' in receiver_kwargs:
                     receiver_limit = receiver_kwargs['receiver_limit']
                 else:

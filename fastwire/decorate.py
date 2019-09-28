@@ -41,6 +41,10 @@ def receive(s, box=None, container=None, **receiver_kwargs):
             # Called at class creation
             if not hasattr(owner, '_connected_signals'):
                 owner._connected_signals = []
+            else:
+                # Copy the list in case we're in a subclass
+                # We don't want to append it to the superclass
+                owner._connected_signals = owner._connected_signals.copy()
             cs = owner._connected_signals
             for signal in s:
                 cs.append([name, signal, box, container, receiver_kwargs])

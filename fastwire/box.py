@@ -120,3 +120,6 @@ class Box():
     
     def clear(self):
         self._cs.clear()
+        
+    def deactivate(self):
+        self._active = 'default'

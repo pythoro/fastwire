@@ -34,7 +34,7 @@ class Wire():
         self._attrs = attrs
         self.reset()
         
-    def _emit(self):
+    def _emit(self, *args, **kwargs):
         ''' The default, unconnected, method '''
         raise AttributeError('Wire instance is not connected')
     
@@ -47,7 +47,8 @@ class Wire():
         if self.emit != self._emit:
             if settings.WARN_WIRE_RECONNECT:
                 warnings.warn('FASTWIRE: Wire "' + str(self.name)
-                + '" was already connected and was reconnected. Use a Signal'
+                + '" was already connected to ' + str(self.emit)
+                + ' and was reconnected to ' + str(receiver) + '. Use a Signal'
                 + ' if multiple connections are required.', stacklevel=2)
         self.emit = receiver
         self.fetch = receiver

@@ -205,6 +205,13 @@ class Signal():
         self._next_id = 0
         self._conditions = {}
         self.emit = self._emit
+        
+    def receivers(self):
+        receivers = []
+        for receiver_id, ref in self._receivers.items():
+            receiver = ref()
+            receivers.append(receiver)
+        return receivers
 
 
 class SignalContainer(container.Container):

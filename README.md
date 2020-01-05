@@ -38,7 +38,7 @@ We can connect to that signal like this:
 ```python
 class A():
     def __init__(self):
-    signal.connect(self.connected)
+        signal.connect(self.connected)
 
     def connected(self, a):
         print('Class A instance received a: ' + str(a))
@@ -55,7 +55,7 @@ And we can connect other signals if we want to:
 signal_b = sc.signal('new_sig')
 signal_b.connect(a.connected)
 signal_b.emit(a=3)
-# Class A instance received a 5.7
+# Class A instance received a 3
 ```
 
 Connecting also works with functions. We can connect a function to the same

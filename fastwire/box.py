@@ -28,6 +28,7 @@ class Box():
         
     @property
     def containers(self):
+        ''' Return a dictionary of containers in the box '''
         return self._cs
         
     def add(self, cid=None, activate=True, remove_with=None):
@@ -58,6 +59,13 @@ class Box():
         return c
         
     def remove_with(self, obj, cid=None):
+        ''' Set this box to be removed when an object is garbage collected 
+        
+        Args:
+            obj (object): The object to remove the container with
+            cid (int): The optional container id to remove. Defaults to the
+                active container.
+        '''
         cid = self._active if cid is None else cid
         weakref.finalize(obj, self.remove, cid=cid)
 
@@ -83,6 +91,7 @@ class Box():
         
     @property
     def active(self):
+        ''' Return the active container id '''
         return self._active
         
     def get_active(self):
@@ -107,11 +116,12 @@ class Box():
         return self._cs[self._active][name]
     
     def reset_all(self):
-        ''' Reset all wires in the contain '''
+        ''' Reset all wires in all containers '''
         for key, container in self._cs.items():
             container.reset_all()
             
     def get_container(self, cid=None):
+        ''' Return the container given by a container id '''
         if cid is None:
             return self.get_active()
         if cid not in self._cs:
@@ -119,9 +129,17 @@ class Box():
         return self._cs[cid]
     
     def clear(self):
+        ''' Clear all containers in the box '''
         self._cs.clear()
         
     def deactivate(self, cid=None):
+        ''' Set the active container to 'default' 
+        
+        Args:
+            cid (int): An optional container id. If this id is given, the
+                active container will only be changed if this container
+                is currently active.
+        '''
         if cid is None:
             self._active = 'default'
         elif self._active == cid:

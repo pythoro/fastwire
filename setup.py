@@ -15,14 +15,14 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
 
 setuptools.setup(
     name="fastwire",
-    version="0.1.5",
+    version="0.1.6",
     author="Reuben Rusk",
     author_email="pythoro@mindquip.com",
     description="Easy data transfer between classes.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/pythoro/fastwire.git",
-    download_url="https://github.com/pythoro/fastwire/archive/v0.1.5.zip",
+    download_url="https://github.com/pythoro/fastwire/archive/v0.1.6.zip",
     packages=['fastwire'],
     keywords=['WIRE', 'CONNECTION', 'UTILITY'],
     classifiers=[

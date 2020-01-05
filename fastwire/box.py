@@ -121,5 +121,8 @@ class Box():
     def clear(self):
         self._cs.clear()
         
-    def deactivate(self):
-        self._active = 'default'
+    def deactivate(self, cid=None):
+        if cid is None:
+            self._active = 'default'
+        elif self._active == cid:
+            self._active = 'default'

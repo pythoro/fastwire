@@ -44,3 +44,8 @@ class Test_Wire(unittest.TestCase):
         wire.connect(a.connected)
         wire.emit(5)
         self.assertEqual(a._a, 5)
+        
+    def test_default(self):
+        wire = fastwire.Wire(name='test_name')
+        wire.set_default(57)
+        self.assertEqual(wire.fetch(), 57)

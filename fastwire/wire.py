@@ -32,6 +32,7 @@ class Wire():
         self._doc = doc
         self._receiver_limit = 1
         self._attrs = attrs
+        self._default_return = None
         self.reset()
         
     def _emit(self, *args, **kwargs):
@@ -71,6 +72,14 @@ class Wire():
         ''' Allow the wire to call the receiver '''
         self.emit = self._old
         del self._old
+        
+    def set_default(self, default):
+        self._default_return = default
+        self.emit = self._default
+        self.fetch = self._default
+        
+    def _default(self):
+        return self._default_return
         
     def reset(self):
         ''' Fully reset the wire, disconnecting it if required '''

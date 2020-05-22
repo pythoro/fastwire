@@ -22,6 +22,11 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/pythoro/fastwire.git",
+    project_urls={
+        'Documentation': 'https://fastwire.readthedocs.io/en/latest/',
+        'Source': 'https://github.com/pythoro/fastwire.git',
+        'Tracker': 'https://github.com/pythoro/fastwire/issues',
+    },
     download_url="https://github.com/pythoro/fastwire/archive/v0.1.6.zip",
     packages=['fastwire'],
     keywords=['WIRE', 'CONNECTION', 'UTILITY'],

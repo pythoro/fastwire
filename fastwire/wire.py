@@ -151,3 +151,4 @@ def wire_container(name):
 default_wire_box = wire_box('default')
 default_wire_container = wire_container('default')
 wire = default_wire_container.wire
+get_wire_box = wire_box

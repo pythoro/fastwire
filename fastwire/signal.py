@@ -262,3 +262,4 @@ def signal_container(name):
 default_signal_box = signal_box('default')
 default_signal_container = signal_container('default')
 signal = default_signal_container.signal
+get_signal_box = signal_box

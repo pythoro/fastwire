@@ -78,7 +78,7 @@ class Wire():
         self.emit = self._default
         self.fetch = self._default
         
-    def _default(self):
+    def _default(self, *args, **kwargs):
         return self._default_return
         
     def reset(self):

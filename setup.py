@@ -15,7 +15,7 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
 
 setuptools.setup(
     name="fastwire",
-    version="0.1.6",
+    version="0.1.7",
     author="Reuben Rusk",
     author_email="pythoro@mindquip.com",
     description="Easy data transfer between classes.",
